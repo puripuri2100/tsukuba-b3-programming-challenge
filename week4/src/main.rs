@@ -1,6 +1,10 @@
 use clap::Parser;
 
+mod keyborads;
 mod nikora;
+mod orders;
+mod sort;
+mod tight_words;
 
 #[derive(Parser, Debug)]
 struct Arg {
@@ -11,6 +15,14 @@ fn main() {
   let args = Arg::parse();
   if args.probrem == "nikora" {
     nikora::main();
+  } else if args.probrem == "tight_words" {
+    tight_words::main();
+  } else if args.probrem == "keyboards" {
+    keyborads::main();
+  } else if args.probrem == "orders" {
+    orders::main();
+  } else if args.probrem == "sort" {
+    sort::main()
   } else {
     println!("Unsupported");
   }

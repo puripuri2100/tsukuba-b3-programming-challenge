@@ -59,38 +59,7 @@ pub fn main() {
     lst: [usize; n],
   }
 
-  // dp[i][j]：jマスにジャンプ幅iで行くときの入場料の最小合計
-  let mut dp = vec![vec![usize::MAX; n + 1]; n + 1];
-  // スタート地点なので当然入場料0
-  dp[0][1] = 0;
-  // 答え
-  let mut a = usize::MAX;
-
-  for i in 1..n {
-    // 最大のジャンプ幅
-    // 長さの和が最大
-    let jump_max = n.min(((i * (i + 1)) / 2) + 1);
-
-    println!("-- {i}: {jump_max}");
-
-    // 前進するときのコスト
-    for j in (i + 1)..=jump_max {
-      dp[i][j] = dp[i - 1][j - i] + lst[j - 1];
-      println!("dp[{i}][{j}]: {}", dp[i][j]);
-
-      if j == n {
-        a = a.min(dp[i][j]);
-      }
-    }
-
-    // 後退した場合のコストの更新
-    for k in (1..=jump_max - 1).rev() {
-      println!("k: {k}");
-      dp[i][k] = (dp[i][k]).min(dp[i][k + 1] + lst[k - 1]);
-    }
-    println!("a: {a}");
-    println!("dp: {dp:?}");
-  }
-
+  let mut a = 0_usize;
+  for i in 0..n {}
   println!("{a}");
 }
