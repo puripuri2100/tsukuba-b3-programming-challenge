@@ -53,13 +53,79 @@ macro_rules! read_value {
   };
 }
 
+#[derive(Debug, Clone, Copy)]
+struct RangeInfo {
+  start: usize,
+  end: usize,
+  len: usize
+}
+
+impl RangeInfo {
+  fn new_range(&self, w: usize) -> Self {
+    if w < self.start {
+      Self {
+        start: w,
+        end: self.end,
+        len: self.len +1
+      }
+    } else if self.end < w {
+      Self {
+        start: self.start,
+        end: w,
+        len: self.len + 1
+      }
+    } else {
+      *self
+    }
+  }
+
+  // 幅が小さい方を出す
+  fn cmp(&self, other: &Self) -> Self {
+    if self.start <= other.start && self.end >= other.end {
+      *other
+    } else {
+      *self
+    }
+  }
+}
+
 pub fn main() {
   input! {
     n: usize,
     lst: [usize; n],
   }
 
-  let mut a = 0_usize;
-  for i in 0..n {}
-  println!("{a}");
+  // 現在の最大の長さ
+  // 探索範囲の枝刈できる
+  let mut max_len = 1_usize;
+  // dp[i]: 長さがiの組み合わせのうち、最も小さい幅の組み合わせ
+  let mut dp = vec![None; n + 1];
+  dp[1] = Some(RangeInfo {
+    start: lst[0],
+    end: lst[0],
+    len: 1
+  });
+  for (i, weight) in lst.iter().enumerate() {
+    if i != 0 {
+      for l in 0..=max_len {
+        if let Some(range) = dp[l] {
+          let new_range = range.new_range(*weight);
+          if let Some(range) = dp[l + 1] {
+            let r = range.cmp(&new_range);
+            if r.len == l + 1 {
+              dp[l + 1] = Some(r);
+            }
+          } else {
+            dp[new_range.len] = Some(new_range);
+            if l == max_len {
+              max_len = new_range.len;
+            }
+          }
+        }
+      }
+    }
+    //println!("{dp:?}");
+  }
+
+  println!("{max_len}");
 }
