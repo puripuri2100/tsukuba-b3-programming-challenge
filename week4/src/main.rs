@@ -1,5 +1,7 @@
 use clap::Parser;
 
+mod bag;
+mod dolls;
 mod keyborads;
 mod nikora;
 mod orders;
@@ -23,6 +25,10 @@ fn main() {
     orders::main();
   } else if args.probrem == "sort" {
     sort::main()
+  } else if args.probrem == "dolls" {
+    dolls::main();
+  } else if args.probrem == "bag" {
+    bag::main()
   } else {
     println!("Unsupported");
   }

@@ -60,9 +60,9 @@ pub fn main() {
   }
 
   // dp[i][j]：jマスにジャンプ幅iで行くときの入場料の最小合計
-  let mut dp = vec![vec![usize::MAX; n + 1]; n + 1];
+  let mut dp = vec![vec![None; n + 1]; n + 1];
   // スタート地点なので当然入場料0
-  dp[0][1] = 0;
+  dp[0][1] = Some(0);
   // 答え
   let mut a = usize::MAX;
 
@@ -71,25 +71,32 @@ pub fn main() {
     // 長さの和が最大
     let jump_max = n.min(((i * (i + 1)) / 2) + 1);
 
-    println!("-- {i}: {jump_max}");
-
     // 前進するときのコスト
     for j in (i + 1)..=jump_max {
-      dp[i][j] = dp[i - 1][j - i] + lst[j - 1];
-      println!("dp[{i}][{j}]: {}", dp[i][j]);
+      if let Some(t) = dp[i - 1][j - i] {
+        dp[i][j] = Some(t + lst[j - 1]);
+      }
 
+      // 目的地に到達できたときに答えを更新
       if j == n {
-        a = a.min(dp[i][j]);
+        if let Some(t) = dp[i][j] {
+          a = a.min(t);
+        }
       }
     }
 
     // 後退した場合のコストの更新
-    for k in (1..=jump_max - 1).rev() {
-      println!("k: {k}");
-      dp[i][k] = (dp[i][k]).min(dp[i][k + 1] + lst[k - 1]);
+    for k in (1..=jump_max - i).rev() {
+      if let Some(t1) = dp[i][k] {
+        if let Some(t2) = dp[i][k + i] {
+          dp[i][k] = Some(t1.min(t2 + lst[k - 1]));
+        }
+      } else {
+        if let Some(t2) = dp[i][k + i] {
+          dp[i][k] = Some(t2 + lst[k - 1]);
+        }
+      }
     }
-    println!("a: {a}");
-    println!("dp: {dp:?}");
   }
 
   println!("{a}");
