@@ -6,6 +6,7 @@ mod keyborads;
 mod nikora;
 mod orders;
 mod sort;
+mod spatulas;
 mod tight_words;
 
 #[derive(Parser, Debug)]
@@ -29,6 +30,8 @@ fn main() {
     dolls::main();
   } else if args.probrem == "bag" {
     bag::main()
+  } else if args.probrem == "spatulas" {
+    spatulas::main()
   } else {
     println!("Unsupported");
   }
