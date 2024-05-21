@@ -22,29 +22,21 @@ pub fn main() {
 }
 
 fn f(l: &mut Vec<(usize, usize)>) -> usize {
-  l.sort_by(|a, b| b.0.cmp(&a.0));
-  let mut new_l = Vec::new();
-  let mut count = 1;
-  loop {
-    let mut now_w = l[0].0;
-    let mut now_h = l[0].1;
-    let mut l_iter = l.iter();
-    l_iter.next().unwrap();
-    for (w, h) in l_iter {
-      if now_w > *w && now_h > *h {
-        now_w = *w;
-        now_h = *h;
+  l.sort();
+
+  println!("{l:?}");
+
+  let mut lis = Vec::new();
+
+  for (_w, h) in l.iter() {
+    if let Err(pos) = lis.binary_search(h) {
+      if pos == lis.len() {
+        lis.push(*h);
       } else {
-        new_l.push((*w, *h));
+        lis[pos] = *h
       }
     }
-
-    if new_l.is_empty() {
-      break;
-    }
-    *l = new_l.clone();
-    new_l = Vec::new();
-    count += 1;
   }
-  count
+
+  lis.len()
 }

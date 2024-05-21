@@ -29,8 +29,6 @@ impl AnsInfo {
   fn max_cost(&self, other: &Cost) -> Self {
     if self.sum > other.p {
       *self
-    } else if self.sum == other.p && self.start == self.end {
-      *self
     } else {
       AnsInfo {
         start: other.t,
@@ -61,14 +59,14 @@ pub fn main() {
     let mut cost_lst = Vec::new();
     let mut time_lst = Vec::new();
     let mut time = 0;
-    for _ in 0..n {
+    for i in 0..n {
       let mut s = String::new();
       std::io::stdin().read_line(&mut s).unwrap();
       let mut s_l = s.trim().split_whitespace();
       let t = s_l.next().unwrap().parse::<usize>().unwrap();
       let p = (s_l.next().unwrap().parse::<f64>().unwrap() * 100.0) as isize;
       time_lst.push(t);
-      if time == 0 {
+      if i == 0 {
         cost_lst.push(Cost { t, p: p - 8, d: 0 });
         time = t;
       } else {
