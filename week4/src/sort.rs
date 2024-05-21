@@ -57,7 +57,7 @@ macro_rules! read_value {
 struct RangeInfo {
   start: usize,
   end: usize,
-  len: usize
+  len: usize,
 }
 
 impl RangeInfo {
@@ -66,13 +66,13 @@ impl RangeInfo {
       Self {
         start: w,
         end: self.end,
-        len: self.len +1
+        len: self.len + 1,
       }
     } else if self.end < w {
       Self {
         start: self.start,
         end: w,
-        len: self.len + 1
+        len: self.len + 1,
       }
     } else {
       *self
@@ -103,7 +103,7 @@ pub fn main() {
   dp[1] = Some(RangeInfo {
     start: lst[0],
     end: lst[0],
-    len: 1
+    len: 1,
   });
   for (i, weight) in lst.iter().enumerate() {
     if i != 0 {
