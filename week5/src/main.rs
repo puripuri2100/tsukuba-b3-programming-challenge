@@ -1,5 +1,6 @@
 use clap::Parser;
 
+mod coast;
 mod gold;
 mod internet;
 
@@ -14,6 +15,8 @@ fn main() {
     internet::main()
   } else if args.probrem == "golds" {
     gold::main()
+  } else if args.probrem == "coast" {
+    coast::main()
   } else {
     println!("Unsupported");
   }
