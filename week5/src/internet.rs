@@ -53,6 +53,8 @@ macro_rules! read_value {
   };
 }
 
+use std::collections::VecDeque;
+
 pub fn main() {
   input! {
     n: usize,
@@ -65,26 +67,22 @@ pub fn main() {
   let mut graph: Vec<Vec<usize>> = vec![vec![]; n + 1];
   for l in lst.iter() {
     graph[l[0]].push(l[1]);
-    graph[l[0]].sort();
-    graph[l[0]].dedup();
     graph[l[1]].push(l[0]);
-    graph[l[1]].sort();
-    graph[l[1]].dedup();
   }
 
   //println!("{graph:?}");
 
+  let mut deque: VecDeque<usize> = VecDeque::new();
+  deque.push_back(1);
   let mut checked = vec![false; n + 1];
   checked[0] = true;
   checked[1] = true;
-  for (i, l) in graph.iter().enumerate() {
-    if i != 0 {
-      let is_connect = l.iter().any(|i| checked[*i]) || checked[i];
-      if is_connect {
-        checked[i] = true;
-        for i in l.iter() {
-          checked[*i] = true;
-        }
+  while let Some(head) = deque.pop_front() {
+    let l = &graph[head];
+    for i in l.iter() {
+      if !checked[*i] {
+        deque.push_back(*i);
+        checked[*i] = true;
       }
     }
   }
