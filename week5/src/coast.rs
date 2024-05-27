@@ -43,7 +43,6 @@ pub fn main() {
     }
   }
 
-
   // 海と陸の境界カウント
   let mut count = 0_usize;
   for y in 0..n {
