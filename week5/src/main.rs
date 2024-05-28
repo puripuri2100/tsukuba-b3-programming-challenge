@@ -1,9 +1,11 @@
 use clap::Parser;
 
 mod coast;
+mod conservation;
 mod gold;
 mod internet;
 mod muddyhike;
+mod nature;
 
 #[derive(Parser, Debug)]
 struct Arg {
@@ -20,6 +22,10 @@ fn main() {
     coast::main()
   } else if args.probrem == "hike" {
     muddyhike::main()
+  } else if args.probrem == "nature" {
+    nature::main()
+  } else if args.probrem == "conservation" {
+    conservation::main()
   } else {
     println!("Unsupported");
   }
