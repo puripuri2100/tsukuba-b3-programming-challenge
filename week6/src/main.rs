@@ -1,5 +1,6 @@
 use clap::Parser;
 
+mod crusher;
 mod grid;
 
 #[derive(Parser, Debug)]
@@ -11,6 +12,8 @@ fn main() {
   let args = Arg::parse();
   if args.probrem == "grid" {
     grid::main()
+  } else if args.probrem == "crusher" {
+    crusher::main()
   } else {
     println!("Unsupported");
   }
