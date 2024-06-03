@@ -1,5 +1,6 @@
 use clap::Parser;
 
+mod arbitrage;
 mod crusher;
 mod grid;
 
@@ -14,6 +15,8 @@ fn main() {
     grid::main()
   } else if args.probrem == "crusher" {
     crusher::main()
+  } else if args.probrem == "arbitrage" {
+    arbitrage::main()
   } else {
     println!("Unsupported");
   }
