@@ -3,6 +3,7 @@ use clap::Parser;
 mod arbitrage;
 mod crusher;
 mod grid;
+mod trails;
 
 #[derive(Parser, Debug)]
 struct Arg {
@@ -17,6 +18,8 @@ fn main() {
     crusher::main()
   } else if args.probrem == "arbitrage" {
     arbitrage::main()
+  } else if args.probrem == "trails" {
+    trails::main()
   } else {
     println!("Unsupported");
   }

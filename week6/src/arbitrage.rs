@@ -32,53 +32,42 @@ pub fn main() {
       let r1 = r_s.next().unwrap().parse::<usize>().unwrap();
       let r2 = r_s.next().unwrap().parse::<usize>().unwrap();
       let ratio1 = r2 as f64 / r1 as f64;
-      let ratio2 = r1 as f64 / r2 as f64;
       if let Some(ratio) = ratio_map[*n1][*n2] {
-        if ratio != ratio1 {
-          println!("Arbitrage");
-          is_ans = true;
-          break;
+        if ratio < ratio1 {
+          ratio_map[*n1][*n2] = Some(ratio1)
         }
       } else {
         ratio_map[*n1][*n2] = Some(ratio1)
       }
-
-      if let Some(ratio) = ratio_map[*n2][*n1] {
-        if ratio != ratio2 {
-          println!("Arbitrage");
-          is_ans = true;
-          break;
-        }
-      } else {
-        ratio_map[*n2][*n1] = Some(ratio2)
-      }
     }
 
-    for k in 0..c {
-      for i in 0..c {
-        for j in 0..c {
-          let v1 = ratio_map[i][k];
-          let v2 = ratio_map[k][j];
-          let v3 = ratio_map[i][j];
-          if let Some(v3) = v3 {
-            if let (Some(v1), Some(v2)) = (v1, v2) {
-              if v3 < v1 * v2 {
-                ratio_map[i][j] = Some(v1 * v2)
+    if !is_ans {
+      for k in 0..c {
+        for i in 0..c {
+          for j in 0..c {
+            let v1 = ratio_map[i][k];
+            let v2 = ratio_map[k][j];
+            let v3 = ratio_map[i][j];
+            if let Some(v3) = v3 {
+              if let (Some(v1), Some(v2)) = (v1, v2) {
+                if v3 < v1 * v2 {
+                  ratio_map[i][j] = Some(v1 * v2)
+                }
               }
+            } else if let (Some(v1), Some(v2)) = (v1, v2) {
+              ratio_map[i][j] = Some(v1 * v2)
             }
-          } else if let (Some(v1), Some(v2)) = (v1, v2) {
-            ratio_map[i][j] = Some(v1 * v2)
           }
         }
       }
-    }
-    #[allow(clippy::needless_range_loop)]
-    for i in 0..c {
-      if let Some(v) = ratio_map[i][i] {
-        if v > 1.0 {
-          println!("Arbitrage");
-          is_ans = true;
-          break;
+      #[allow(clippy::needless_range_loop)]
+      for i in 0..c {
+        if let Some(v) = ratio_map[i][i] {
+          if v > 1.0 {
+            println!("Arbitrage");
+            is_ans = true;
+            break;
+          }
         }
       }
     }
