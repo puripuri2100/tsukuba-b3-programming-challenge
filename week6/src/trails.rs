@@ -28,58 +28,35 @@ pub fn main() {
   }
 
   // ダイクストラ法の改変
-  let mut weight_map = vec![(usize::MAX, Vec::new()); p + 1];
-  weight_map[0] = (0, vec![Vec::new()]);
+  let mut weight_map = vec![(usize::MAX, 0); p + 1];
+  weight_map[0] = (0, 0);
   let mut queue = vec![None; p + 1];
   queue[0] = Some(0_usize);
-  loop {
-    let mut q = queue
-      .iter()
-      .enumerate()
-      .filter(|(_, w)| w.is_some())
-      .map(|(i, w)| (i, w.unwrap()))
-      .collect::<Vec<_>>();
-    q.sort_by_key(|(_, w)| *w);
-    if let Some((from, w)) = q.first() {
-      queue[*from] = None;
-      for (to, weight_info) in map[*from].iter().enumerate() {
-        if let Some((weight, n)) = weight_info {
-          #[allow(clippy::comparison_chain)]
-          if weight_map[to].0 > w + weight {
-            // 新しいルートの追加
-            let mut l1 = weight_map[*from].1.clone();
-            let l2 = l1
-              .iter_mut()
-              .map(|l| {
-                l.push((*weight, *n));
-                l.to_vec()
-              })
-              .collect::<Vec<Vec<_>>>();
-            // より小さなルートが見つかったので経路は上書き
-            weight_map[to].0 = w + weight;
-            weight_map[to].1 = l2;
-            // 更新されたマップなので追加
-            queue[to] = Some(w + weight);
-          } else if weight_map[to].0 == w + weight {
-            let mut l = weight_map[*from].clone().1;
-            l.iter_mut().for_each(|l| l.push((*weight, *n)));
-            // 経路は追加
-            weight_map[to].1.append(&mut l);
-          }
+  while let Some((from, w)) = queue
+    .iter()
+    .enumerate()
+    .filter(|(_, w)| w.is_some())
+    .map(|(i, w)| (i, w.unwrap()))
+    .min_by_key(|(_, w)| *w)
+  {
+    queue[from] = None;
+    for (to, weight_info) in map[from].iter().enumerate() {
+      if let Some((weight, n)) = weight_info {
+        #[allow(clippy::comparison_chain)]
+        if weight_map[to].0 > w + weight {
+          // より小さなルートが見つかったので経路は上書き
+          weight_map[to].0 = w + weight;
+          weight_map[to].1 = weight_map[from].1 + weight * n;
+          // 更新されたマップなので追加
+          queue[to] = Some(w + weight);
+        } else if weight_map[to].0 == w + weight {
+          // 経路は追加
+          weight_map[to].1 += weight_map[from].1 + weight * n;
         }
       }
-    } else {
-      break;
     }
   }
 
-  let mut ans = 0;
-  let route_lst = &weight_map[p].1;
-  for l in route_lst.iter() {
-    for (w, n) in l.iter() {
-      ans += w * n;
-    }
-  }
-
+  let ans = &weight_map[p].1;
   println!("{}", ans * 2);
 }
