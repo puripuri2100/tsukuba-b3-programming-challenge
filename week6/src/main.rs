@@ -3,6 +3,7 @@ use clap::Parser;
 mod arbitrage;
 mod crusher;
 mod grid;
+mod maze;
 mod trails;
 
 #[derive(Parser, Debug)]
@@ -20,6 +21,8 @@ fn main() {
     arbitrage::main()
   } else if args.probrem == "trails" {
     trails::main()
+  } else if args.probrem == "maze" {
+    maze::main()
   } else {
     println!("Unsupported");
   }
