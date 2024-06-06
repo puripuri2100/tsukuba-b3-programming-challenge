@@ -2,6 +2,7 @@ use clap::Parser;
 
 mod exam;
 mod knight;
+mod power;
 mod sign;
 
 #[derive(Parser, Debug)]
@@ -17,6 +18,8 @@ fn main() {
     exam::main()
   } else if args.probrem == "knight" {
     knight::main()
+  } else if args.probrem == "power" {
+    power::main()
   } else {
     println!("Unsupported");
   }
