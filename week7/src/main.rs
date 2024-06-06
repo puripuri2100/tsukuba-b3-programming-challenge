@@ -1,6 +1,7 @@
 use clap::Parser;
 
 mod exam;
+mod knight;
 mod sign;
 
 #[derive(Parser, Debug)]
@@ -14,6 +15,8 @@ fn main() {
     sign::main()
   } else if args.probrem == "exam" {
     exam::main()
+  } else if args.probrem == "knight" {
+    knight::main()
   } else {
     println!("Unsupported");
   }
