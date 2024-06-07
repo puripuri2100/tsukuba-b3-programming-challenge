@@ -1,5 +1,6 @@
 use clap::Parser;
 
+mod buzzwords;
 mod exam;
 mod knight;
 mod power;
@@ -20,6 +21,8 @@ fn main() {
     knight::main()
   } else if args.probrem == "power" {
     power::main()
+  } else if args.probrem == "buzzwords" {
+    buzzwords::main()
   } else {
     println!("Unsupported");
   }
