@@ -1,5 +1,6 @@
 use clap::Parser;
 
+mod billiard;
 mod gps;
 mod ornaments;
 mod platforme;
@@ -20,6 +21,8 @@ fn main() {
     ornaments::main()
   } else if args.probrem == "gps" {
     gps::main()
+  } else if args.probrem == "billiard" {
+    billiard::main()
   } else {
     println!("Unsupported");
   }
