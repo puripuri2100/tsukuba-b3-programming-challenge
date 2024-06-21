@@ -1,9 +1,9 @@
 use clap::Parser;
 
+mod gps;
 mod ornaments;
 mod platforme;
 mod polygon;
-mod gps;
 
 #[derive(Parser, Debug)]
 struct Arg {
