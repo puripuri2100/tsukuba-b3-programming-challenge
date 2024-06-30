@@ -2,6 +2,7 @@ use clap::Parser;
 
 mod bee;
 mod bus;
+mod gears;
 
 #[derive(Parser, Debug)]
 struct Arg {
@@ -14,6 +15,8 @@ fn main() {
     bus::main()
   } else if args.probrem == "bee" {
     bee::main()
+  } else if args.probrem == "gears" {
+    gears::main()
   } else {
     println!("Unsupported");
   }
