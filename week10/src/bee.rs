@@ -1,6 +1,5 @@
 #![allow(clippy::needless_range_loop)]
 
-use std::collections::HashMap;
 use std::collections::VecDeque;
 
 pub fn main() {
@@ -10,10 +9,14 @@ pub fn main() {
   let mut h = s_l.next().unwrap().parse::<usize>().unwrap();
   let n = s_l.next().unwrap().parse::<usize>().unwrap();
   let m = s_l.next().unwrap().parse::<usize>().unwrap();
+  if h == 0 {
+    println!("0");
+    return;
+  }
 
   // 空かどうかのマップ
-  let mut group_map: Vec<Vec<Option<(usize, usize)>>> = vec![vec![None; m]; n];
-  let mut queue: VecDeque<(usize, usize)> = VecDeque::new();
+  let mut map: Vec<Vec<bool>> = vec![vec![false; m]; n];
+  let mut checked_map: Vec<Vec<bool>> = vec![vec![false; m]; n];
 
   for i in 0..n {
     let mut s = String::new();
@@ -21,205 +24,37 @@ pub fn main() {
     let s_l = s.split_whitespace();
     for (j, s) in s_l.enumerate() {
       if s == "." {
-        if i % 2 != 0 {
-          if let Some(group) = group_map[i - 1][j] {
-            group_map[i][j] = Some(group);
-          }
-          if j != m - 1 {
-            if let Some(group) = group_map[i - 1][j + 1] {
-              group_map[i][j] = Some(group);
-            }
-          }
-          if j != 0 {
-            if let Some(group) = group_map[i][j - 1] {
-              group_map[i][j] = Some(group);
-            }
-          }
-        } else {
-          if i != 0 {
-            if let Some(group) = group_map[i - 1][j] {
-              group_map[i][j] = Some(group);
-            }
-            if j != 0 {
-              if let Some(group) = group_map[i - 1][j - 1] {
-                group_map[i][j] = Some(group);
-              }
-            }
-          }
-          if j != 0 {
-            if let Some(group) = group_map[i][j - 1] {
-              group_map[i][j] = Some(group);
-            }
-          }
-        }
-        group_map[i][j] = Some((i, j));
-        queue.push_back((i, j));
+        map[i][j] = true;
       }
     }
   }
 
-  while let Some((i, j)) = queue.pop_front() {
-    let now_group = group_map[i][j].unwrap();
-    //println!("({i}, {j}): {now_group:?}");
-    // 隣接する6つの座標を検査
-    if i % 2 != 0 {
-      // 奇数段目
-      // 上左は必ずある
-      let i2 = i - 1;
-      let j2 = j;
-      if let Some(now_group2) = group_map[i2][j2] {
-        if now_group != now_group2 {
-          group_map[i2][j2] = Some(now_group);
-          queue.push_back((i2, j2));
-        }
-      }
-      if j != 0 {
-        // 左ある
-        let i2 = i;
-        let j2 = j - 1;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-      }
-      if i != n - 1 {
-        // 下左ある
-        let i2 = i + 1;
-        let j2 = j;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-      }
-      if j != m - 1 {
-        // 右ある
-        // 上右ある
-        let i2 = i - 1;
-        let j2 = j + 1;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-        // 右ある
-        let i2 = i;
-        let j2 = j + 1;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-        // 下右ある
-        if i != n - 1 {
-          let i2 = i + 1;
-          let j2 = j + 1;
-          if let Some(now_group2) = group_map[i2][j2] {
-            if now_group != now_group2 {
-              group_map[i2][j2] = Some(now_group);
-              queue.push_back((i2, j2));
-            }
-          }
-        }
-      }
-    } else {
-      // 偶数段目
-      if j != 0 {
-        // 左がある
-        if i != 0 {
-          // 上左がある
-          let i2 = i - 1;
-          let j2 = j - 1;
-          if let Some(now_group2) = group_map[i2][j2] {
-            if now_group != now_group2 {
-              group_map[i2][j2] = Some(now_group);
-              queue.push_back((i2, j2));
-            }
-          }
-        }
-        // 左がある
-        let i2 = i;
-        let j2 = j - 1;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-        if i != n - 1 {
-          // 上左がある
-          let i2 = i + 1;
-          let j2 = j - 1;
-          if let Some(now_group2) = group_map[i2][j2] {
-            if now_group != now_group2 {
-              group_map[i2][j2] = Some(now_group);
-              queue.push_back((i2, j2));
-            }
-          }
-        }
-      }
-      if i != 0 {
-        // 上右がある
-        let i2 = i - 1;
-        let j2 = j;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-      }
-      if j != m - 1 {
-        // 右がある
-        let i2 = i;
-        let j2 = j + 1;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-      }
-      if i != n - 1 {
-        // 下右がある
-        let i2 = i + 1;
-        let j2 = j;
-        if let Some(now_group2) = group_map[i2][j2] {
-          if now_group != now_group2 {
-            group_map[i2][j2] = Some(now_group);
-            queue.push_back((i2, j2));
-          }
-        }
-      }
-    }
-  }
+  let mut ans_lst = Vec::new();
 
-  let mut count_map: HashMap<(usize, usize), usize> = HashMap::new();
   for i in 0..n {
     for j in 0..m {
-      if let Some(group) = group_map[i][j] {
-        if let Some(count) = count_map.get(&group) {
-          count_map.insert(group, *count + 1);
-        } else {
-          count_map.insert(group, 1);
+      if map[i][j] && !checked_map[i][j] {
+        // まだ訪問されていない
+        let mut count = 1;
+        let mut queue = VecDeque::new();
+        queue.push_back((i, j));
+        checked_map[i][j] = true;
+        while let Some((i, j)) = queue.pop_front() {
+          let lst = check(n, m, i, j, &map, &mut checked_map);
+          for (i2, j2) in lst.iter() {
+            queue.push_back((*i2, *j2));
+            count += 1;
+          }
         }
+        ans_lst.push(count);
       }
     }
   }
 
-  let mut lst = Vec::new();
-  for (_, v) in count_map.iter() {
-    lst.push(*v);
-  }
-  lst.sort_by(|a, b| b.cmp(a));
+  ans_lst.sort_by(|a, b| b.cmp(a));
 
   let mut ans = 0_usize;
-  for i in lst.iter() {
+  for i in ans_lst.iter() {
     if h <= *i {
       ans += 1;
       break;
@@ -228,6 +63,52 @@ pub fn main() {
       ans += 1;
     }
   }
-
   println!("{ans}");
+}
+
+fn check(
+  n: usize,
+  m: usize,
+  i: usize,
+  j: usize,
+  map: &[Vec<bool>],
+  checked_map: &mut [Vec<bool>],
+) -> Vec<(usize, usize)> {
+  let n = n as isize;
+  let m = m as isize;
+  let i = i as isize;
+  let j = j as isize;
+  let even_diff = [(-1, -1), (-1, 0), (0, -1), (0, 1), (1, -1), (1, 0)];
+  let odd_diff = [(-1, 0), (-1, 1), (0, -1), (0, 1), (1, 0), (1, 1)];
+  let mut v = Vec::new();
+  if i % 2 == 0 {
+    // 偶数番目列
+    for (plus_i, plus_j) in even_diff.iter() {
+      let i2 = i + plus_i;
+      let j2 = j + plus_j;
+      if i2 >= 0 && i2 < n && j2 >= 0 && j2 < m {
+        let i2 = i2 as usize;
+        let j2 = j2 as usize;
+        if map[i2][j2] && !checked_map[i2][j2] {
+          checked_map[i2][j2] = true;
+          v.push((i2, j2));
+        }
+      }
+    }
+  } else {
+    // 奇数番目列
+    for (plus_i, plus_j) in odd_diff.iter() {
+      let i2 = i + plus_i;
+      let j2 = j + plus_j;
+      if i2 >= 0 && i2 < n && j2 >= 0 && j2 < m {
+        let i2 = i2 as usize;
+        let j2 = j2 as usize;
+        if map[i2][j2] && !checked_map[i2][j2] {
+          checked_map[i2][j2] = true;
+          v.push((i2, j2));
+        }
+      }
+    }
+  }
+  v
 }
