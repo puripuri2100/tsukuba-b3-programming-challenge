@@ -2,6 +2,8 @@ use clap::Parser;
 
 mod bee;
 mod bus;
+mod cannonball;
+mod charge;
 mod gears;
 
 #[derive(Parser, Debug)]
@@ -17,6 +19,10 @@ fn main() {
     bee::main()
   } else if args.probrem == "gears" {
     gears::main()
+  } else if args.probrem == "charge" {
+    charge::main()
+  } else if args.probrem == "cannonball" {
+    cannonball::main()
   } else {
     println!("Unsupported");
   }
